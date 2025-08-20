@@ -11,6 +11,8 @@ import { buscarPeliculaAnio } from '../controllers/buscarPeliculaAnio.controller
 import { crearPelicula } from '../controllers/crearPelicula.controller.js';
 import { actualizarPelicula } from '../controllers/actualizarPelicula.controller.js'
 import { eliminarPelicula } from '../controllers/eliminarPelicula.controller.js';
+import {buscarPorNombreAnio} from '../controllers/buscarPorNombreAnio.controller.js';
+
 
 // Creo mi instancia del router
 export const api = Router();
@@ -23,5 +25,6 @@ api.get("/peliculas/buscar/anio/:year", buscarPeliculaAnio);
 api.post("/peliculas/crear", crearPelicula);
 api.put("/peliculas/actualizar/:id", actualizarPelicula);
 api.delete("/peliculas/eliminar/:id", eliminarPelicula);
+api.get("/peliculas/buscarNombreAnio/nombre/:nombre/anio/:anio", buscarPorNombreAnio);
 
 
