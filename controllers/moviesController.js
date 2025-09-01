@@ -7,6 +7,19 @@ const movieService = new MovieService();
  */
 export const moviesController = {
   /**
+   * Obtiene métricas sobre las películas
+   */
+  getMovieMetrics: (req, res) => {
+    try {
+      const metrics = movieService.getMovieMetrics();
+      res.json(metrics);
+    } catch (error) {
+      res.status(500).json({
+        error: "No se pudieron obtener las métricas de películas"
+      });
+    }
+  },
+  /**
    * Obtiene todas las películas
    */
   getAllMovies: (req, res) => {
@@ -132,16 +145,70 @@ export const moviesController = {
   },
 
   /**
-   * Busca películas por año
+   * Obtiene películas por año
    */
   getMoviesByYear: (req, res) => {
     try {
-      const year = parseInt(req.params.year);
+      const year = req.params.year;
       const movies = movieService.getMoviesByYear(year);
       res.json(movies);
     } catch (error) {
       res.status(500).json({
         error: "No se pudieron obtener las películas por año"
+      });
+    }
+  },
+
+  /**
+   * Obtiene películas por rango de años
+   */
+  getMoviesByYearRange: (req, res) => {
+    try {
+      const fromYear = req.query.fromYear;
+      const toYear = req.query.toYear;
+      
+      if (!fromYear || !toYear) {
+        return res.status(400).json({
+          error: "Se requieren los parámetros fromYear y toYear"
+        });
+      }
+      
+      // Verificar si hay películas en el rango especificado
+      const movies = movieService.getMoviesByYearRange(fromYear, toYear);
+      
+      // Verificar si el array está vacío y devolver un array vacío explícitamente
+      if (movies.length === 0) {
+        // Devolver un array vacío explícitamente para evitar que se modifique la respuesta
+        return res.json([]);
+      }
+      
+      return res.json(movies);
+    } catch (error) {
+      console.error("Error en getMoviesByYearRange:", error);
+      res.status(500).json({
+        error: "No se pudieron obtener las películas por rango de años"
+      });
+    }
+  },
+
+  /**
+   * Obtiene películas por duración mínima
+   */
+  getMoviesByMinDuration: (req, res) => {
+    try {
+      const minDuration = req.query.minDuration;
+      
+      if (!minDuration) {
+        return res.status(400).json({
+          error: "Se requiere el parámetro minDuration"
+        });
+      }
+      
+      const movies = movieService.getMoviesByMinDuration(minDuration);
+      res.json(movies);
+    } catch (error) {
+      res.status(500).json({
+        error: "No se pudieron obtener las películas por duración mínima"
       });
     }
   },

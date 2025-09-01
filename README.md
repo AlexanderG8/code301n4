@@ -101,7 +101,10 @@ El proyecto implementa el patrón de servicios para la lógica de negocio:
   - Eliminar película
   - Filtrar películas por rating
   - Buscar películas por año
+  - Buscar películas por rango de años
+  - Buscar películas por duración mínima
   - Buscar películas por título y año
+  - Obtener métricas de películas (total, géneros, ratings, etc.)
 
 ### Controladores
 
@@ -116,8 +119,11 @@ Las rutas definen los endpoints disponibles en la API:
 - `GET /peliculas`: Obtiene todas las películas
 - `GET /peliculas/top`: Películas con rating mayor a 9
 - `GET /peliculas/low`: Películas con rating menor a 5
-- `GET /peliculas/buscar/:id`: Busca película por ID
+- `GET /peliculas/buscar/id/:id`: Busca película por ID
 - `GET /peliculas/buscar/anio/:year`: Busca películas por año
+- `GET /peliculas/buscar/anios?fromYear=X&toYear=Y`: Busca películas por rango de años
+- `GET /peliculas/buscar/duracion?minDuration=X`: Busca películas con duración mínima
+- `GET /peliculas/metrics`: Obtiene métricas sobre las películas
 - `POST /peliculas/crear`: Crea una nueva película
 - `PUT /peliculas/actualizar/:id`: Actualiza una película existente
 - `DELETE /peliculas/eliminar/:id`: Elimina una película
@@ -181,6 +187,119 @@ Respuesta:
     },
     // ... más películas
   ]
+}
+```
+
+### Buscar películas por rango de años
+
+```bash
+curl -X GET "http://localhost:3000/peliculas/buscar/anios?fromYear=2008&toYear=2010"
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "id": "tt0468569",
+    "title": "The Dark Knight",
+    "year": 2008,
+    "genre": "Action, Crime, Drama",
+    "director": "Christopher Nolan",
+    "actors": "Christian Bale, Heath Ledger, Aaron Eckhart",
+    "plot": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "imdb_rating": 9,
+    "runtime_minutes": 152
+  },
+  // ... más películas entre 2008 y 2010
+]
+```
+
+### Buscar películas por duración mínima
+
+```bash
+curl -X GET "http://localhost:3000/peliculas/buscar/duracion?minDuration=180"
+```
+
+Respuesta:
+
+```json
+[
+  {
+    "id": "tt0047478",
+    "title": "Seven Samurai",
+    "year": 1954,
+    "genre": "Action, Adventure, Drama",
+    "director": "Akira Kurosawa",
+    "actors": "Toshirô Mifune, Takashi Shimura, Keiko Tsushima",
+    "plot": "A poor village under attack by bandits recruits seven unemployed samurai to help them defend themselves.",
+    "imdb_rating": 8.6,
+    "runtime_minutes": 207
+  },
+  // ... más películas con duración mayor o igual a 180 minutos
+]
+```
+
+### Obtener métricas de películas
+
+```bash
+curl -X GET "http://localhost:3000/peliculas/metrics"
+```
+
+Respuesta:
+
+```json
+{
+  "total_movies": 50,
+  "total_genres": 18,
+  "average_rating": 8.66,
+  "longest_movie": {
+    "id": "tt0047478",
+    "title": "Seven Samurai",
+    "runtime_minutes": 207
+  },
+  "shortest_movie": {
+    "id": "tt0027977",
+    "title": "Modern Times",
+    "runtime_minutes": 87
+  },
+  "newest_movie": {
+    "id": "tt0816692",
+    "title": "Interstellar",
+    "year": 2014
+  },
+  "oldest_movie": {
+    "id": "tt0027977",
+    "title": "Modern Times",
+    "year": 1936
+  },
+  "highest_rated_movie": {
+    "id": "tt0111161",
+    "title": "The Shawshank Redemption",
+    "rating": 9.3
+  },
+  "lowest_rated_movie": {
+    "id": "tt0021749",
+    "title": "Apocalypse Now",
+    "rating": 8.4
+  },
+  "movies_by_decade": {
+    "1930": 1,
+    "1940": 2,
+    "1950": 2,
+    "1960": 4,
+    "1970": 6,
+    "1980": 4,
+    "1990": 17,
+    "2000": 11,
+    "2010": 3
+  },
+  "movies_by_genre": {
+    "Drama": 38,
+    "Crime": 14,
+    "Action": 13,
+    // ... más géneros
+  }
 }
 ```
 
