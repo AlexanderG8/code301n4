@@ -15,23 +15,73 @@ JavaScript era como un chef que solo podía cocinar en la cocina del restaurante
 
 ---
 
-## Estructura de Carpetas BÁSICA
+## Estructura de Carpetas
 
-Para esta primera clase usaremos una estructura muy simple:
+El proyecto sigue una estructura organizada para facilitar el mantenimiento y la escalabilidad:
 
 ```
-mi-primer-backend/
-├── data/              ← Aquí guardaremos nuestros datos (archivos JSON)
-│   └── productos.json
-├── app.js            ← El archivo principal de nuestro servidor
-├── package.json      ← Información del proyecto
-└── README.md         ← Documentación
+proyecto/
+├── controllers/          ← Lógica de negocio para las entidades
+│   └── moviesController.js
+├── data/                 ← Archivos de datos
+│   └── movies.json
+├── routes/               ← Definición de rutas API
+│   └── peliculas.routes.js
+├── middlewares/          ← Middlewares personalizados
+│   ├── logger.js         ← Logging de peticiones
+│   ├── errorHandler.js   ← Manejo centralizado de errores
+│   └── resHandler.js     ← Modificación de respuestas
+├── services/             ← Servicios para acceso a datos
+│   └── movieService.js
+├── swagger/              ← Documentación de la API
+│   └── swagger.js
+├── .env                  ← Variables de entorno (no incluido en Git)
+├── .env.example          ← Ejemplo de variables de entorno
+├── .gitignore            ← Archivos ignorados por Git
+├── app.js                ← Punto de entrada de la aplicación
+├── package.json          ← Dependencias del proyecto
+└── README.md             ← Documentación
 ```
 
-**¿Por qué esta estructura?**
-- **Simple**: Solo lo esencial para empezar
-- **Clara**: Cada archivo tiene un propósito específico
-- **Escalable**: Después podemos agregar más carpetas
+**Beneficios de esta estructura:**
+- **Organizada**: Separación clara de responsabilidades
+- **Mantenible**: Cada componente tiene un propósito específico
+- **Escalable**: Facilita la adición de nuevas características
+- **Documentada**: Incluye documentación con Swagger
+
+---
+
+## Documentación de la API
+
+El proyecto incluye documentación de la API utilizando Swagger. Para acceder a la documentación:
+
+1. Inicia el servidor: `npm run dev`
+2. Abre en tu navegador: `http://localhost:3000/api-docs`
+
+Desde la interfaz de Swagger podrás:
+- Ver todos los endpoints disponibles
+- Probar las operaciones directamente
+- Consultar los esquemas de datos
+
+---
+
+## Variables de Entorno
+
+El proyecto utiliza variables de entorno para la configuración. Copia el archivo `.env.example` a `.env` y ajusta los valores según sea necesario:
+
+```
+# Puerto del servidor
+PORT=3000
+
+# Entorno de ejecución
+NODE_ENV=development
+
+# Ruta de los datos
+DATA_PATH=./data/movies.json
+
+# Configuración de CORS
+CORS_ORIGIN=*
+```
 
 ---
 

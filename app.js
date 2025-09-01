@@ -13,10 +13,14 @@ import { responseOk } from './middlewares/resHandler.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { setupSwagger } from './swagger/swagger.js'
 
+// Cargar variables de entorno
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Vamos a crear una instancia de nuestro servidor
 const app = express();
-// Siempre un servidor va a tener un puerto
-const port = 3000;
+// Obtener puerto desde variables de entorno o usar valor por defecto
+const port = process.env.PORT || 3000;
 // Midleware
 app.use(express.json());
 app.use(cors());

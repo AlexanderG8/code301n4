@@ -3,15 +3,7 @@
 */
 
 import { Router } from "express";
-import { traerPeliculas } from "../controllers/traerPeliculas.controller.js";
-import { ratingTopPeliculas } from "../controllers/ratinTopPeliculas.controller.js";
-import { ratingLowPeliculas } from "../controllers/ratingLowPeliculas.controller.js";
-import { buscarPelicula } from '../controllers/buscarPelicula.controller.js';
-import { buscarPeliculaAnio } from '../controllers/buscarPeliculaAnio.controller.js';
-import { crearPelicula } from '../controllers/crearPelicula.controller.js';
-import { actualizarPelicula } from '../controllers/actualizarPelicula.controller.js'
-import { eliminarPelicula } from '../controllers/eliminarPelicula.controller.js';
-import {buscarPorNombreAnio} from '../controllers/buscarPorNombreAnio.controller.js';
+import { moviesController } from "../controllers/moviesController.js";
 
 /**
  * @swagger
@@ -40,7 +32,7 @@ export const api = Router();
  *               items:
  *                 $ref: '#/components/schemas/Pelicula'
  */
-api.get("/peliculas", traerPeliculas);
+api.get("/peliculas", moviesController.getAllMovies);
 
 /**
  * @swagger
@@ -58,7 +50,7 @@ api.get("/peliculas", traerPeliculas);
  *               items:
  *                 $ref: '#/components/schemas/Pelicula'
  */
-api.get("/peliculas/top", ratingTopPeliculas);
+api.get("/peliculas/top", moviesController.getTopRatedMovies);
 
 /**
  * @swagger
@@ -76,7 +68,7 @@ api.get("/peliculas/top", ratingTopPeliculas);
  *               items:
  *                 $ref: '#/components/schemas/Pelicula'
  */
-api.get("/peliculas/low", ratingLowPeliculas);
+api.get("/peliculas/low", moviesController.getLowRatedMovies);
 
 /**
  * @swagger
@@ -101,7 +93,7 @@ api.get("/peliculas/low", ratingLowPeliculas);
  *       404:
  *         description: Película no encontrada
  */
-api.get("/peliculas/buscar/:id", buscarPelicula);
+api.get("/peliculas/buscar/:id", moviesController.getMovieById);
 
 /**
  * @swagger
@@ -126,7 +118,7 @@ api.get("/peliculas/buscar/:id", buscarPelicula);
  *               items:
  *                 $ref: '#/components/schemas/Pelicula'
  */
-api.get("/peliculas/buscar/anio/:year", buscarPeliculaAnio);
+api.get("/peliculas/buscar/anio/:year", moviesController.getMoviesByYear);
 
 /**
  * @swagger
@@ -146,7 +138,7 @@ api.get("/peliculas/buscar/anio/:year", buscarPeliculaAnio);
  *       400:
  *         description: Datos inválidos
  */
-api.post("/peliculas/crear", crearPelicula);
+api.post("/peliculas/crear", moviesController.createMovie);
 
 /**
  * @swagger
@@ -173,7 +165,7 @@ api.post("/peliculas/crear", crearPelicula);
  *       404:
  *         description: Película no encontrada
  */
-api.put("/peliculas/actualizar/:id", actualizarPelicula);
+api.put("/peliculas/actualizar/:id", moviesController.updateMovie);
 
 /**
  * @swagger
@@ -194,7 +186,7 @@ api.put("/peliculas/actualizar/:id", actualizarPelicula);
  *       404:
  *         description: Película no encontrada
  */
-api.delete("/peliculas/eliminar/:id", eliminarPelicula);
+api.delete("/peliculas/eliminar/:id", moviesController.deleteMovie);
 
 /**
  * @swagger
@@ -225,6 +217,13 @@ api.delete("/peliculas/eliminar/:id", eliminarPelicula);
  *               items:
  *                 $ref: '#/components/schemas/Pelicula'
  */
-api.get("/peliculas/buscarNombreAnio/nombre/:nombre/anio/:anio", buscarPorNombreAnio);
+api.get("/peliculas/buscarNombreAnio/nombre/:nombre/anio/:anio", (req, res) => {
+  // Adaptamos la ruta para usar el método getMoviesByTitleAndYear
+  req.query = {
+    title: req.params.nombre,
+    year: req.params.anio
+  };
+  moviesController.getMoviesByTitleAndYear(req, res);
+});
 
 
