@@ -6,8 +6,12 @@
 
 
 import express from "express";
-import fs from "fs";
+import cors from 'cors';
 import { api } from './routes/peliculas.routes.js'
+import { logRequest } from './middlewares/logger.js'
+import { responseOk } from './middlewares/resHandler.js'
+import { errorHandler } from './middlewares/errorHandler.js'
+import { setupSwagger } from './swagger/swagger.js'
 
 // Vamos a crear una instancia de nuestro servidor
 const app = express();
@@ -15,15 +19,18 @@ const app = express();
 const port = 3000;
 // Midleware
 app.use(express.json());
-app.use(api);
+app.use(cors());
+app.use(logRequest);
 
-/*
-   Siempre va a correr en la siguiente ruta:
-   http://localhost:3000
-*/
-app.listen(port, () => {
-   console.log(`💚 Mi servidor esta corriendo en el puerto ${port}`);
-})
+// Configurar Swagger
+setupSwagger(app);
+
+// Rutas
+app.use(api);
+// Middleware responseOk solo para rutas de películas
+app.use(responseOk);
+
+
 
 /**
  * Endpoint - Ruta o Link
@@ -35,13 +42,56 @@ app.listen(port, () => {
  * DELETE - Eliminar Información
  */
 
-/*
-   Endpoint- Ruta o Link
+/**
+ * @swagger
+ * /saludo:
+ *   get:
+ *     summary: Devuelve un saludo
+ *     tags: [General]
+ *     responses:
+ *       200:
+ *         description: Saludo exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 saludo:
+ *                   type: string
  */
 app.get("/saludo", (req, res) => {
    res.json({
       "saludo": "Hola amigos"
    })
+})
+
+/**
+ * @swagger
+ * /error:
+ *   get:
+ *     summary: Genera un error para probar el manejo de errores
+ *     tags: [General]
+ *     responses:
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+app.get("/error", (req, res) => {
+   throw new Error("Error de prueba");
+});
+
+// Middlewares de respuesta (DESPUÉS de las rutas)
+app.use(errorHandler);
+
+/*
+   Siempre va a correr en la siguiente ruta:
+   http://localhost:3000
+*/
+app.listen(port, () => {
+   console.log(`💚 Mi servidor esta corriendo en el puerto ${port}`);
 })
 
 /*
