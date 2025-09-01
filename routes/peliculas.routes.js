@@ -217,13 +217,6 @@ api.delete("/peliculas/eliminar/:id", moviesController.deleteMovie);
  *               items:
  *                 $ref: '#/components/schemas/Pelicula'
  */
-api.get("/peliculas/buscarNombreAnio/nombre/:nombre/anio/:anio", (req, res) => {
-  // Adaptamos la ruta para usar el método getMoviesByTitleAndYear
-  req.query = {
-    title: req.params.nombre,
-    year: req.params.anio
-  };
-  moviesController.getMoviesByTitleAndYear(req, res);
-});
+api.get("/peliculas/buscarNombreAnio/nombre/:nombre/anio/:anio",moviesController.getMoviesByTitleAndYear);
 
 

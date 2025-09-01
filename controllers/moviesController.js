@@ -151,7 +151,8 @@ export const moviesController = {
    */
   getMoviesByTitleAndYear: (req, res) => {
     try {
-      const { title, year } = req.query;
+      const title = req.query.title || req.params.nombre;
+      const year = req.query.year || req.params.anio;
       const parsedYear = parseInt(year);
       
       const movies = movieService.getMoviesByTitleAndYear(title, parsedYear);
